@@ -312,7 +312,7 @@ export default function Home() {
       </section>
 
       {/* 상담 신청 폼 */}
-      <section className="py-16 md:py-20">
+      <section id="consultation-form" className="py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">무료 컨설팅 및 데모 신청하기</h2>
