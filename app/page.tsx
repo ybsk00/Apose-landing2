@@ -59,7 +59,7 @@ export default function Home() {
             <span>병원 마케팅 긴급 진단</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight mb-6 drop-shadow-xl">
+          <h1 className="text-3xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight mb-6 drop-shadow-xl">
             막혀있는 병원 마케팅,
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
@@ -116,7 +116,7 @@ export default function Home() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 leading-tight text-slate-900">
+            <h2 className="text-2xl md:text-4xl font-bold mb-6 leading-tight text-slate-900">
               병원 블로그 마케팅,
               <br />
               <span className="text-red-600 underline decoration-4 decoration-red-200 underline-offset-4">
