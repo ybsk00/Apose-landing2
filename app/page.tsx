@@ -63,7 +63,7 @@ export default function Home() {
             <span>병원 마케팅 긴급 진단</span>
           </div>
 
-          <h1 className="text-3xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight mb-6 drop-shadow-xl">
+          <h1 className="text-3xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight mb-6 drop-shadow-xl break-keep">
             막힌 블로그 시대,
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
@@ -72,14 +72,14 @@ export default function Home() {
             로 길을 엽니다.
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto font-medium leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto font-medium leading-relaxed break-keep">
             블로그 지수도 안 보이고, 의료법은 더 까다로워졌습니다.
             <br className="hidden md:block" />
             이제 환자는 검색창이 아니라 AI에게 증상·치료를 묻습니다.
           </p>
 
           <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 max-w-2xl mx-auto mb-10">
-            <p className="text-lg font-semibold text-blue-200">
+            <p className="text-lg font-semibold text-blue-200 break-keep">
               우리 병원을 AI 대화 안으로 넣어, 증상 질문 → 진료예약까지
               <br className="md:hidden" /> 자동으로 이어주는 시스템입니다.
             </p>
@@ -101,7 +101,7 @@ export default function Home() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-2xl md:text-4xl font-bold mb-6 leading-tight text-slate-900">
+            <h2 className="text-2xl md:text-4xl font-bold mb-6 leading-tight text-slate-900 break-keep">
               병원 블로그,
               <br />
               <span className="text-red-600 underline decoration-4 decoration-red-200 underline-offset-4">
@@ -121,7 +121,7 @@ export default function Home() {
                 className="w-full h-auto"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
-                <p className="text-white font-bold text-lg">
+                <p className="text-white font-bold text-lg break-keep">
                   <AlertCircle className="inline-block w-5 h-5 mr-2 text-red-500" />
                   그래서 필요한 건 "AI 안에 들어간 병원"입니다.
                 </p>
@@ -171,12 +171,12 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="text-blue-600 font-bold tracking-wider uppercase text-sm">Solution</span>
-            <h2 className="text-3xl md:text-5xl font-bold mt-2 mb-6 text-slate-900">
+            <h2 className="text-3xl md:text-5xl font-bold mt-2 mb-6 text-slate-900 break-keep">
               AI 이중퍼널 한 번으로,
               <br />
               증상 질문 → 진료예약까지
             </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto break-keep">
               환자가 AI에게 증상을 묻는 순간부터,
               <br className="hidden md:block" />
               사전 문진과 예약까지 자동으로 이어집니다.
@@ -249,10 +249,10 @@ export default function Home() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight break-keep">
               원장님은 <span className="text-blue-600">진료</span>에만 집중하세요
             </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto break-keep">
               상담·선별·예약은 AI가 대신 처리합니다.
             </p>
           </div>
