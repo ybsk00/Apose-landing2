@@ -9,22 +9,20 @@ import { Zap, BookOpen, ChevronDown } from "lucide-react"
 // 개별 메시지 컴포넌트
 function ChatMessageBubble({
     message,
-    isTyping,
     displayedText
 }: {
     message: ChatMessage
-    isTyping: boolean
     displayedText: string
 }) {
     const isHospital = message.speaker === 'hospital'
 
     return (
-        <div className={`flex gap-3 ${isHospital ? 'flex-row' : 'flex-row-reverse'} animate-fade-in`}>
+        <div className={`flex gap-3 ${isHospital ? 'flex-row' : 'flex-row-reverse'}`}>
             {/* 아바타 */}
             <div className="shrink-0">
                 <div className={`w-12 h-12 rounded-full overflow-hidden border-2 ${isHospital
-                        ? 'border-amber-400/50 shadow-lg shadow-amber-500/20'
-                        : 'border-cyan-400/50 shadow-lg shadow-cyan-500/20'
+                    ? 'border-amber-400/50 shadow-lg shadow-amber-500/20'
+                    : 'border-cyan-400/50 shadow-lg shadow-cyan-500/20'
                     }`}>
                     <Image
                         src={isHospital ? '/의사.png' : '/회사.png'}
@@ -43,12 +41,11 @@ function ChatMessageBubble({
                     {isHospital ? '병원장' : '루미브리즈'}
                 </span>
                 <div className={`px-4 py-3 rounded-2xl ${isHospital
-                        ? 'bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-400/30 rounded-tl-sm'
-                        : 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 rounded-tr-sm'
+                    ? 'bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-400/30 rounded-tl-sm'
+                    : 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 rounded-tr-sm'
                     }`}>
                     <p className="text-white leading-relaxed whitespace-pre-line">
                         {displayedText}
-                        {isTyping && <span className="animate-pulse">|</span>}
                     </p>
                 </div>
             </div>
@@ -61,11 +58,11 @@ function TypingIndicator({ speaker }: { speaker: 'hospital' | 'company' }) {
     const isHospital = speaker === 'hospital'
 
     return (
-        <div className={`flex gap-3 ${isHospital ? 'flex-row' : 'flex-row-reverse'} animate-fade-in`}>
+        <div className={`flex gap-3 ${isHospital ? 'flex-row' : 'flex-row-reverse'}`}>
             <div className="shrink-0">
                 <div className={`w-12 h-12 rounded-full overflow-hidden border-2 ${isHospital
-                        ? 'border-amber-400/50'
-                        : 'border-cyan-400/50'
+                    ? 'border-amber-400/50'
+                    : 'border-cyan-400/50'
                     }`}>
                     <Image
                         src={isHospital ? '/의사.png' : '/회사.png'}
@@ -77,8 +74,8 @@ function TypingIndicator({ speaker }: { speaker: 'hospital' | 'company' }) {
                 </div>
             </div>
             <div className={`px-4 py-3 rounded-2xl ${isHospital
-                    ? 'bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-400/30'
-                    : 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-400/30'
+                ? 'bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-400/30'
+                : 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-400/30'
                 }`}>
                 <div className="flex gap-1">
                     <span className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -93,7 +90,7 @@ function TypingIndicator({ speaker }: { speaker: 'hospital' | 'company' }) {
 // 상담 CTA 컴포넌트
 function ConsultationCTA({ onAccept }: { onAccept: () => void }) {
     return (
-        <div className="animate-fade-in mt-8">
+        <div className="mt-8">
             <div className="glass-card p-6 text-center max-w-md mx-auto">
                 <h3 className="text-xl font-bold text-white mb-4">
                     데모시연과 상담을 원하십니까?
@@ -123,7 +120,7 @@ function SpeedControl({
     onSpeedChange,
     onShowAll
 }: {
-    speed: 'normal' | 'fast'
+    speed: 'normal' | 'slow'
     onSpeedChange: () => void
     onShowAll: () => void
 }) {
@@ -131,13 +128,13 @@ function SpeedControl({
         <div className="fixed bottom-6 right-6 flex flex-col gap-2 z-50">
             <button
                 onClick={onSpeedChange}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl backdrop-blur-md border transition-all ${speed === 'fast'
-                        ? 'bg-yellow-500/20 border-yellow-400/50 text-yellow-300'
-                        : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl backdrop-blur-md border transition-all ${speed === 'slow'
+                    ? 'bg-yellow-500/20 border-yellow-400/50 text-yellow-300'
+                    : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
                     }`}
             >
                 <Zap className="w-4 h-4" />
-                <span className="text-sm font-medium">2배속</span>
+                <span className="text-sm font-medium">{speed === 'slow' ? '빠르게' : '느리게'}</span>
             </button>
             <button
                 onClick={onShowAll}
@@ -163,16 +160,22 @@ function NewMessageButton({ onClick }: { onClick: () => void }) {
     )
 }
 
+// 표시할 메시지 타입 (완료된 메시지 + 현재 타이핑 중인 텍스트)
+interface DisplayItem {
+    id: string
+    message: ChatMessage
+    text: string
+}
+
 // 메인 채팅봇 랜딩 컴포넌트
 export function ChatBotLanding() {
-    const [displayedMessages, setDisplayedMessages] = useState<ChatMessage[]>([])
+    // 화면에 표시할 모든 메시지 (완료 + 진행중)
+    const [displayItems, setDisplayItems] = useState<DisplayItem[]>([])
     const [currentMessageIndex, setCurrentMessageIndex] = useState(0)
-    const [currentText, setCurrentText] = useState("")
-    const [isTyping, setIsTyping] = useState(false)
     const [showTypingIndicator, setShowTypingIndicator] = useState(false)
     const [showCTA, setShowCTA] = useState(false)
     const [showForm, setShowForm] = useState(false)
-    const [speed, setSpeed] = useState<'normal' | 'fast'>('normal')
+    const [speed, setSpeed] = useState<'normal' | 'slow'>('normal')
     const [isScrollLocked, setIsScrollLocked] = useState(false)
     const [showNewMessageButton, setShowNewMessageButton] = useState(false)
 
@@ -213,17 +216,20 @@ export function ChatBotLanding() {
     // 전체보기 클릭
     const handleShowAll = useCallback(() => {
         isAnimatingRef.current = false
-        setDisplayedMessages(chatMessages)
+        const allItems: DisplayItem[] = chatMessages.map(msg => ({
+            id: `msg-${msg.id}`,
+            message: msg,
+            text: msg.text
+        }))
+        setDisplayItems(allItems)
         setCurrentMessageIndex(chatMessages.length)
-        setCurrentText("")
-        setIsTyping(false)
         setShowTypingIndicator(false)
         setShowCTA(true)
     }, [])
 
     // 속도 토글
     const handleSpeedChange = useCallback(() => {
-        setSpeed(prev => prev === 'normal' ? 'fast' : 'normal')
+        setSpeed(prev => prev === 'normal' ? 'slow' : 'normal')
     }, [])
 
     // 타이핑 애니메이션
@@ -235,6 +241,7 @@ export function ChatBotLanding() {
 
         isAnimatingRef.current = true
         const currentMessage = chatMessages[currentMessageIndex]
+        const itemId = `msg-${currentMessage.id}`
 
         // 타이핑 인디케이터 표시
         setShowTypingIndicator(true)
@@ -242,7 +249,9 @@ export function ChatBotLanding() {
         const indicatorTimeout = setTimeout(() => {
             if (!isAnimatingRef.current) return
             setShowTypingIndicator(false)
-            setIsTyping(true)
+
+            // 새 메시지 아이템 추가 (빈 텍스트로 시작)
+            setDisplayItems(prev => [...prev, { id: itemId, message: currentMessage, text: '' }])
 
             let charIndex = 0
             const typingInterval = setInterval(() => {
@@ -252,15 +261,23 @@ export function ChatBotLanding() {
                 }
 
                 if (charIndex < currentMessage.text.length) {
-                    setCurrentText(currentMessage.text.slice(0, charIndex + 1))
                     charIndex++
+                    // 기존 아이템의 텍스트 업데이트 (덮어쓰기)
+                    setDisplayItems(prev => {
+                        const newItems = [...prev]
+                        const lastIdx = newItems.length - 1
+                        if (lastIdx >= 0 && newItems[lastIdx].id === itemId) {
+                            newItems[lastIdx] = {
+                                ...newItems[lastIdx],
+                                text: currentMessage.text.slice(0, charIndex)
+                            }
+                        }
+                        return newItems
+                    })
                 } else {
                     clearInterval(typingInterval)
-                    setIsTyping(false)
-                    setDisplayedMessages(prev => [...prev, currentMessage])
-                    setCurrentText("")
 
-                    // 다음 메시지로
+                    // 다음 메시지로 이동
                     const nextTimeout = setTimeout(() => {
                         if (!isAnimatingRef.current) return
                         setCurrentMessageIndex(prev => prev + 1)
@@ -271,7 +288,7 @@ export function ChatBotLanding() {
             }, TYPING_SPEED[speed])
 
             return () => clearInterval(typingInterval)
-        }, 800)
+        }, 500)
 
         return () => {
             clearTimeout(indicatorTimeout)
@@ -281,7 +298,7 @@ export function ChatBotLanding() {
     // 메시지 추가 시 스크롤
     useEffect(() => {
         scrollToBottom()
-    }, [displayedMessages, currentText, scrollToBottom])
+    }, [displayItems, scrollToBottom])
 
     // 상담 폼 표시
     const handleAcceptConsultation = () => {
@@ -306,24 +323,14 @@ export function ChatBotLanding() {
                 className="flex-1 overflow-y-auto px-4 py-6"
             >
                 <div className="max-w-2xl mx-auto space-y-4">
-                    {/* 표시된 메시지들 */}
-                    {displayedMessages.map((msg) => (
+                    {/* 모든 메시지 (완료 + 타이핑 중) */}
+                    {displayItems.map((item) => (
                         <ChatMessageBubble
-                            key={msg.id}
-                            message={msg}
-                            isTyping={false}
-                            displayedText={msg.text}
+                            key={item.id}
+                            message={item.message}
+                            displayedText={item.text}
                         />
                     ))}
-
-                    {/* 현재 타이핑 중인 메시지 */}
-                    {isTyping && currentMessageIndex < chatMessages.length && (
-                        <ChatMessageBubble
-                            message={chatMessages[currentMessageIndex]}
-                            isTyping={true}
-                            displayedText={currentText}
-                        />
-                    )}
 
                     {/* 타이핑 인디케이터 */}
                     {showTypingIndicator && currentMessageIndex < chatMessages.length && (
@@ -337,7 +344,7 @@ export function ChatBotLanding() {
 
                     {/* 상담 폼 */}
                     {showForm && (
-                        <div className="animate-fade-in mt-8">
+                        <div className="mt-8">
                             <div className="glass-card p-6">
                                 <ConsultationForm />
                             </div>
