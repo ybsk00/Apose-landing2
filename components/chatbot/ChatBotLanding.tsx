@@ -175,20 +175,36 @@ export function ChatBotLanding() {
     const [showTypingIndicator, setShowTypingIndicator] = useState(false)
     const [showCTA, setShowCTA] = useState(false)
     const [showForm, setShowForm] = useState(false)
-    const [speed, setSpeed] = useState<'normal' | 'fast'>('normal')
+    const [speed, setSpeed] = useState<'normal' | 'fast'>('fast')
+    const [isPaused, setIsPaused] = useState(false)
     const [isScrollLocked, setIsScrollLocked] = useState(false)
     const [showNewMessageButton, setShowNewMessageButton] = useState(false)
 
     const chatContainerRef = useRef<HTMLDivElement>(null)
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const isAnimatingRef = useRef(false)
+    const resumeTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+    // 일시정지 및 재개 타이머 관리
+    const pauseAndResetTimer = useCallback(() => {
+        setIsPaused(true)
+        if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
+        resumeTimerRef.current = setTimeout(() => {
+            setIsPaused(false)
+        }, 3000)
+    }, [])
+
+    const handleMouseLeave = useCallback(() => {
+        if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
+        setIsPaused(false)
+    }, [])
 
     // 자동 스크롤
     const scrollToBottom = useCallback(() => {
-        if (!isScrollLocked && messagesEndRef.current) {
+        if (!isScrollLocked && !isPaused && messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
         }
-    }, [isScrollLocked])
+    }, [isScrollLocked, isPaused])
 
     // 스크롤 이벤트 핸들러 (읽는 중 잠금)
     const handleScroll = useCallback(() => {
@@ -204,12 +220,16 @@ export function ChatBotLanding() {
             setIsScrollLocked(false)
             setShowNewMessageButton(false)
         }
-    }, [isScrollLocked])
+
+        // 사용자가 스크롤할 때도 일시정지 타이머 작동
+        pauseAndResetTimer()
+    }, [isScrollLocked, pauseAndResetTimer])
 
     // 새 메시지 버튼 클릭
     const handleNewMessageClick = useCallback(() => {
         setIsScrollLocked(false)
         setShowNewMessageButton(false)
+        setIsPaused(false)
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [])
 
@@ -234,8 +254,10 @@ export function ChatBotLanding() {
 
     // 타이핑 애니메이션
     useEffect(() => {
-        if (currentMessageIndex >= chatMessages.length) {
-            setShowCTA(true)
+        if (currentMessageIndex >= chatMessages.length || isPaused) {
+            if (currentMessageIndex >= chatMessages.length) {
+                setShowCTA(true)
+            }
             return
         }
 
@@ -243,57 +265,61 @@ export function ChatBotLanding() {
         const currentMessage = chatMessages[currentMessageIndex]
         const itemId = `msg-${currentMessage.id}`
 
-        // 타이핑 인디케이터 표시
-        setShowTypingIndicator(true)
+        // 이미 표시 중인 아이템이 있는지 확인 (일시정지 후 재개 시)
+        const existingItemIdx = displayItems.findIndex(item => item.id === itemId)
+        let charIndex = existingItemIdx !== -1 ? displayItems[existingItemIdx].text.length : 0
 
-        const indicatorTimeout = setTimeout(() => {
-            if (!isAnimatingRef.current) return
-            setShowTypingIndicator(false)
-
-            // 새 메시지 아이템 추가 (빈 텍스트로 시작)
-            setDisplayItems(prev => [...prev, { id: itemId, message: currentMessage, text: '' }])
-
-            let charIndex = 0
+        // 타이핑 시작 함수
+        const startTyping = (startIndex: number) => {
+            let currentIdx = startIndex
             const typingInterval = setInterval(() => {
-                if (!isAnimatingRef.current) {
+                if (!isAnimatingRef.current || isPaused) {
                     clearInterval(typingInterval)
                     return
                 }
 
-                if (charIndex < currentMessage.text.length) {
-                    charIndex++
-                    // 기존 아이템의 텍스트 업데이트 (덮어쓰기)
+                if (currentIdx < currentMessage.text.length) {
+                    currentIdx++
                     setDisplayItems(prev => {
                         const newItems = [...prev]
-                        const lastIdx = newItems.length - 1
-                        if (lastIdx >= 0 && newItems[lastIdx].id === itemId) {
-                            newItems[lastIdx] = {
-                                ...newItems[lastIdx],
-                                text: currentMessage.text.slice(0, charIndex)
+                        const targetIdx = newItems.findIndex(item => item.id === itemId)
+                        if (targetIdx !== -1) {
+                            newItems[targetIdx] = {
+                                ...newItems[targetIdx],
+                                text: currentMessage.text.slice(0, currentIdx)
                             }
                         }
                         return newItems
                     })
                 } else {
                     clearInterval(typingInterval)
-
-                    // 다음 메시지로 이동
                     const nextTimeout = setTimeout(() => {
-                        if (!isAnimatingRef.current) return
+                        if (!isAnimatingRef.current || isPaused) return
                         setCurrentMessageIndex(prev => prev + 1)
                     }, MESSAGE_DELAY[speed])
-
                     return () => clearTimeout(nextTimeout)
                 }
             }, TYPING_SPEED[speed])
 
             return () => clearInterval(typingInterval)
-        }, 500)
-
-        return () => {
-            clearTimeout(indicatorTimeout)
         }
-    }, [currentMessageIndex, speed])
+
+        if (charIndex === 0) {
+            // 새 메시지인 경우 인디케이터 표시 후 시작
+            setShowTypingIndicator(true)
+            const indicatorTimeout = setTimeout(() => {
+                if (!isAnimatingRef.current || isPaused) return
+                setShowTypingIndicator(false)
+                setDisplayItems(prev => [...prev, { id: itemId, message: currentMessage, text: '' }])
+                startTyping(0)
+            }, 500)
+            return () => clearTimeout(indicatorTimeout)
+        } else {
+            // 이미 타이핑 중이었던 경우 바로 재개
+            return startTyping(charIndex)
+        }
+
+    }, [currentMessageIndex, speed, isPaused, displayItems.length]) // displayItems.length 추가하여 재개 시점 정확히 포착
 
     // 메시지 추가 시 스크롤
     useEffect(() => {
@@ -320,6 +346,9 @@ export function ChatBotLanding() {
             <div
                 ref={chatContainerRef}
                 onScroll={handleScroll}
+                onMouseEnter={pauseAndResetTimer}
+                onMouseMove={pauseAndResetTimer}
+                onMouseLeave={handleMouseLeave}
                 className="flex-1 overflow-y-auto px-4 py-6"
             >
                 <div className="max-w-2xl mx-auto space-y-4">
