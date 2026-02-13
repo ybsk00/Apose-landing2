@@ -36,14 +36,14 @@ export const chatMessages: ChatMessage[] = [
     { id: 26, speaker: 'company', text: '이 구조로만 바꿔도, 원장님이 느끼는 답답함이 현실적으로 풀리기 시작합니다.' },
 ]
 
-// 타이핑 속도 설정 (ms) - 30% 느리게 조정
+// 타이핑 속도 설정 (ms)
 export const TYPING_SPEED = {
-    normal: 65,  // 기본 속도 (50 → 65, 30% 감속)
-    fast: 33,    // 2배속 보기 (25 → 33, 30% 감속)
+    normal: 30,  // 기본 속도 (빠르고 읽기 편한 속도)
+    fast: 15,    // 2배속 보기
 }
 
-// 메시지 간 딜레이 (ms) - 30% 느리게 조정
+// 메시지 간 딜레이 (ms)
 export const MESSAGE_DELAY = {
-    normal: 1950,  // 기본 속도 (1500 → 1950, 30% 감속)
-    fast: 975,     // 2배속 보기 (750 → 975, 30% 감속)
+    normal: 900,   // 기본 속도
+    fast: 450,     // 2배속 보기
 }

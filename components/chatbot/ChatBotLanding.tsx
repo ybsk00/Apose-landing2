@@ -190,42 +190,43 @@ export function ChatBotLanding() {
 
     // 일시정지 및 재개 타이머 관리
     const pauseAndResetTimer = useCallback(() => {
-        setIsPaused(true)
         if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
         resumeTimerRef.current = setTimeout(() => {
-            setIsPaused(false)
-        }, 3000)
+            setIsScrollLocked(false)
+            setShowNewMessageButton(false)
+            // 자동 스크롤 복귀
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }, 2000)
     }, [])
 
     const handleMouseLeave = useCallback(() => {
-        if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
-        setIsPaused(false)
+        // 마우스가 나가면 바로 재개하지 않고, 타이머 유지
     }, [])
 
     // 자동 스크롤
     const scrollToBottom = useCallback(() => {
-        if (!isScrollLocked && !isPaused && messagesEndRef.current) {
+        if (!isScrollLocked && messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
         }
-    }, [isScrollLocked, isPaused])
+    }, [isScrollLocked])
 
-    // 스크롤 이벤트 핸들러 (읽는 중 잠금)
+    // 스크롤 이벤트 핸들러 (위로 스크롤 시 2초간 정지 후 자동 복귀)
     const handleScroll = useCallback(() => {
         if (!chatContainerRef.current) return
 
         const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current
         const isAtBottom = scrollHeight - scrollTop - clientHeight < 100
 
-        if (!isAtBottom && !isScrollLocked) {
+        if (!isAtBottom) {
             setIsScrollLocked(true)
             setShowNewMessageButton(true)
+            // 2초 후 자동 복귀 타이머 설정
+            pauseAndResetTimer()
         } else if (isAtBottom && isScrollLocked) {
+            if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
             setIsScrollLocked(false)
             setShowNewMessageButton(false)
         }
-
-        // 사용자가 스크롤할 때도 일시정지 타이머 작동
-        pauseAndResetTimer()
     }, [isScrollLocked, pauseAndResetTimer])
 
     // 새 메시지 버튼 클릭
