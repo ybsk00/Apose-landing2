@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback } from "react"
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import Image from "next/image"
 import { chatMessages, TYPING_SPEED, MESSAGE_DELAY, type ChatMessage } from "@/lib/chatScript"
 import { ConsultationForm } from "@/components/consultation-form"
@@ -175,7 +176,7 @@ export function ChatBotLanding() {
     const [showTypingIndicator, setShowTypingIndicator] = useState(false)
     const [showCTA, setShowCTA] = useState(false)
     const [showForm, setShowForm] = useState(false)
-    const [speed, setSpeed] = useState<'normal' | 'fast'>('fast')
+    const [speed, setSpeed] = useState<'normal' | 'fast'>('normal')
     const [isPaused, setIsPaused] = useState(false)
     const [isScrollLocked, setIsScrollLocked] = useState(false)
     const [showNewMessageButton, setShowNewMessageButton] = useState(false)
@@ -184,6 +185,8 @@ export function ChatBotLanding() {
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const isAnimatingRef = useRef(false)
     const resumeTimerRef = useRef<NodeJS.Timeout | null>(null)
+    const typingIntervalRef = useRef<any>(null)
+    const typingTimeoutRef = useRef<any>(null)
 
     // 일시정지 및 재개 타이머 관리
     const pauseAndResetTimer = useCallback(() => {
@@ -254,6 +257,16 @@ export function ChatBotLanding() {
 
     // 타이핑 애니메이션
     useEffect(() => {
+        // 이전 타이머 정리
+        if (typingIntervalRef.current) {
+            clearInterval(typingIntervalRef.current)
+            typingIntervalRef.current = null
+        }
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current)
+            typingTimeoutRef.current = null
+        }
+
         if (currentMessageIndex >= chatMessages.length || isPaused) {
             if (currentMessageIndex >= chatMessages.length) {
                 setShowCTA(true)
@@ -265,61 +278,82 @@ export function ChatBotLanding() {
         const currentMessage = chatMessages[currentMessageIndex]
         const itemId = `msg-${currentMessage.id}`
 
-        // 이미 표시 중인 아이템이 있는지 확인 (일시정지 후 재개 시)
-        const existingItemIdx = displayItems.findIndex(item => item.id === itemId)
-        let charIndex = existingItemIdx !== -1 ? displayItems[existingItemIdx].text.length : 0
-
         // 타이핑 시작 함수
         const startTyping = (startIndex: number) => {
             let currentIdx = startIndex
-            const typingInterval = setInterval(() => {
+            typingIntervalRef.current = setInterval(() => {
                 if (!isAnimatingRef.current || isPaused) {
-                    clearInterval(typingInterval)
+                    if (typingIntervalRef.current) {
+                        clearInterval(typingIntervalRef.current)
+                        typingIntervalRef.current = null
+                    }
                     return
                 }
 
                 if (currentIdx < currentMessage.text.length) {
                     currentIdx++
+                    const sliceEnd = currentIdx
                     setDisplayItems(prev => {
                         const newItems = [...prev]
                         const targetIdx = newItems.findIndex(item => item.id === itemId)
                         if (targetIdx !== -1) {
                             newItems[targetIdx] = {
                                 ...newItems[targetIdx],
-                                text: currentMessage.text.slice(0, currentIdx)
+                                text: currentMessage.text.slice(0, sliceEnd)
                             }
                         }
                         return newItems
                     })
                 } else {
-                    clearInterval(typingInterval)
-                    const nextTimeout = setTimeout(() => {
-                        if (!isAnimatingRef.current || isPaused) return
+                    if (typingIntervalRef.current) {
+                        clearInterval(typingIntervalRef.current)
+                        typingIntervalRef.current = null
+                    }
+                    typingTimeoutRef.current = setTimeout(() => {
+                        if (!isAnimatingRef.current) return
                         setCurrentMessageIndex(prev => prev + 1)
                     }, MESSAGE_DELAY[speed])
-                    return () => clearTimeout(nextTimeout)
                 }
             }, TYPING_SPEED[speed])
-
-            return () => clearInterval(typingInterval)
         }
 
-        if (charIndex === 0) {
-            // 새 메시지인 경우 인디케이터 표시 후 시작
-            setShowTypingIndicator(true)
-            const indicatorTimeout = setTimeout(() => {
-                if (!isAnimatingRef.current || isPaused) return
-                setShowTypingIndicator(false)
-                setDisplayItems(prev => [...prev, { id: itemId, message: currentMessage, text: '' }])
-                startTyping(0)
-            }, 500)
-            return () => clearTimeout(indicatorTimeout)
-        } else {
-            // 이미 타이핑 중이었던 경우 바로 재개
-            return startTyping(charIndex)
-        }
+        // 이미 표시 중인 아이템이 있는지 확인 (일시정지 후 재개 시)
+        setDisplayItems(prev => {
+            const existingIdx = prev.findIndex(item => item.id === itemId)
+            if (existingIdx !== -1) {
+                // 이미 존재하면 현재 위치부터 재개
+                const charIndex = prev[existingIdx].text.length
+                setTimeout(() => startTyping(charIndex), 0)
+                return prev  // 변경 없음
+            } else {
+                // 새 메시지: 타이핑 인디케이터 표시 후 추가
+                setShowTypingIndicator(true)
+                typingTimeoutRef.current = setTimeout(() => {
+                    if (!isAnimatingRef.current || isPaused) return
+                    setShowTypingIndicator(false)
+                    // 첫 글자를 포함하여 빈 말풍선 방지
+                    setDisplayItems(prevItems => {
+                        // 중복 추가 방지
+                        if (prevItems.some(item => item.id === itemId)) return prevItems
+                        return [...prevItems, { id: itemId, message: currentMessage, text: currentMessage.text.slice(0, 1) }]
+                    })
+                    startTyping(1)
+                }, 500)
+                return prev  // 변경 없음 (setTimeout 안에서 처리)
+            }
+        })
 
-    }, [currentMessageIndex, speed, isPaused, displayItems.length]) // displayItems.length 추가하여 재개 시점 정확히 포착
+        return () => {
+            if (typingIntervalRef.current) {
+                clearInterval(typingIntervalRef.current)
+                typingIntervalRef.current = null
+            }
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current)
+                typingTimeoutRef.current = null
+            }
+        }
+    }, [currentMessageIndex, speed, isPaused]) // displayItems.length 제거하여 이중 스트리밍 방지
 
     // 메시지 추가 시 스크롤
     useEffect(() => {
