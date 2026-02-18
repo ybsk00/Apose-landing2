@@ -8,6 +8,7 @@ export default defineSchema({
         email: v.string(),
         phone: v.string(),
         privacy_consent: v.boolean(),
+        createdAt: v.optional(v.number()),
     }),
     hospital_chatbot_leads: defineTable({
         privacy_consent: v.boolean(),
