@@ -44,9 +44,7 @@ function scrollToForm() {
 function StickyTopBar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center justify-between px-4 md:px-8 bg-[#0a0f1a]/80 backdrop-blur-xl border-b border-white/5">
-      <span className="text-sm font-semibold text-white/80 tracking-wide select-none">
-        A Pose
-      </span>
+      <img src="/apose-logo.png" alt="어포스 파트너스" className="h-6 md:h-7 w-auto select-none" />
       <button
         onClick={scrollToForm}
         className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-teal-500 to-cyan-400 text-white hover:from-teal-400 hover:to-cyan-300 transition-all shadow-lg shadow-teal-500/20"
@@ -80,11 +78,11 @@ function HeroSection() {
 
         {/* 서브카피 */}
         <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8 max-w-2xl mx-auto" style={{ wordBreak: "keep-all" }}>
-          우리 병원만을 위한 대화하는 AI를 만드세요.
+          우리 병원만을 위해 대화하는 AI를 만드세요.
           <br />
-          진료 과목, 방문 정보, 주력 시술 —
+          진료 과목, 방문 정보, 주력 시술
           <br />
-          브랜드 기반 AI 챗봇이 24시간 정확하게 안내합니다.
+          브랜드 기반 AI가 24시간 빠르고 정확하게 안내합니다.
         </p>
 
         {/* CTA 버튼 */}
@@ -111,8 +109,8 @@ const problems = [
   },
   {
     icon: MessageCircle,
-    title: "일반 챗봇 답변 퀄리티 표준화",
-    desc: "일반 AI 챗봇은 학습이 없어서 객관식 질문 답변 혹은 잘못된 정보를 안내합니다.",
+    title: "기존 챗봇 퀄리티 저조",
+    desc: "기존 AI 챗봇은 객관식 질의응답 혹은 잘못된 정보를 안내합니다.",
   },
   {
     icon: AlertTriangle,
@@ -175,7 +173,7 @@ const solutions = [
   {
     icon: CalendarCheck,
     title: "문의를 예약으로 전환",
-    desc: "질문 → 적합 치료 및 정보 제공 → 예약 유도까지 AI가 자동으로 만들어냅니다.",
+    desc: "질문 → 적합 답변 제공 → 예약 유도 모두 AI가 자동으로 만들어냅니다.",
   },
 ]
 
@@ -184,7 +182,7 @@ function SolutionSection() {
     <section className="py-16 md:py-24 px-4">
       <div className="max-w-5xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4" style={{ wordBreak: "keep-all" }}>
-          에이포스의 AI 솔루션은 다릅니다
+          어포스의 AI 솔루션은 다릅니다
         </h2>
         <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto" style={{ wordBreak: "keep-all" }}>
           우리 병원 데이터만 학습한 AI가 환자에게 정확한 정보를 안내합니다
@@ -275,8 +273,8 @@ const comparisons = [
     after: "24시간 응대 가능 → 예약 전환 증대",
   },
   {
-    before: "단순 질의응답 응대 → 브랜드 비교 → 이탈 가능성 증대",
-    after: "챗봇 단순 질문 응답 → 즉시 예약 여부 확인 → 예약률 증대",
+    before: "객관식 질의응답 → 브랜드 비교 → 이탈 가능성 증대",
+    after: "질문 맞춤형 답변 → 즉시 예약 유도 → 예약률 증대",
   },
 ]
 
@@ -321,14 +319,14 @@ const steps = [
   {
     icon: Brain,
     step: "Step 2",
-    title: "AI 2중 퍼널 솔루션 개발",
-    desc: "입력된 정보를 학습하고 브랜드 지식 DB를 통해 답변 방향성을 구축합니다.",
+    title: "솔루션 개발 단계",
+    desc: "브랜드 정보를 학습하고 답변에 필요한 DB를 구축",
   },
   {
     icon: Rocket,
     step: "Step 3",
-    title: "챗봇 설치 및 기능 도입",
-    desc: "바로 운영과 유지보수가 시작됩니다.",
+    title: "솔루션 도입 완료",
+    desc: "AI 퍼널 솔루션 도입 후 고객 문의 처리 및 자료 수집",
   },
 ]
 
@@ -776,9 +774,10 @@ function CTAFormSection() {
 function FooterSection() {
   return (
     <footer className="py-8 px-4 border-t border-white/5">
-      <div className="max-w-4xl mx-auto text-center">
+      <div className="max-w-4xl mx-auto text-center space-y-3">
+        <img src="/apose-logo.png" alt="어포스 파트너스" className="h-5 w-auto mx-auto opacity-60" />
         <p className="text-sm text-gray-500 leading-relaxed">
-          에이포스파트너스｜대표 최보람｜contact@apose.partners
+          어포스파트너스｜대표 최보람｜contact@apose.partners
           <br />
           서울특별시 동산로 10길 73, 4층
         </p>
