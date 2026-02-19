@@ -45,7 +45,7 @@ function StickyTopBar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center justify-between px-4 md:px-8 bg-[#0a0f1a]/80 backdrop-blur-xl border-b border-white/5">
       <span className="text-sm font-semibold text-white/80 tracking-wide select-none">
-        LumiBreeze
+        A Pose
       </span>
       <button
         onClick={scrollToForm}
@@ -73,18 +73,18 @@ function HeroSection() {
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6" style={{ wordBreak: "keep-all" }}>
           환자가 질문하면{" "}
           <br className="hidden md:block" />
-          <span className="text-gradient-animate">AI가 우리 병원 정보로만</span>{" "}
+          <span className="text-gradient-animate">AI가 정확하게</span>{" "}
           <br className="hidden md:block" />
           답변합니다
         </h1>
 
         {/* 서브카피 */}
         <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-8 max-w-2xl mx-auto" style={{ wordBreak: "keep-all" }}>
-          일반 ChatGPT는 우리 병원을 모릅니다.
+          우리 병원만을 위한 대화하는 AI를 만드세요.
           <br />
-          진료과목, 의료진, 진료시간, 시술 가격 —
+          진료 과목, 방문 정보, 주력 시술 —
           <br />
-          병원 DB 기반 챗봇이 24시간 정확하게 안내합니다.
+          브랜드 기반 AI 챗봇이 24시간 정확하게 안내합니다.
         </p>
 
         {/* CTA 버튼 */}
@@ -106,18 +106,18 @@ function HeroSection() {
 const problems = [
   {
     icon: Phone,
-    title: "진료시간 문의가 하루 30건 이상",
+    title: "진료시간 외 문의 하루 30건 이상",
     desc: "야간·주말에도 전화가 울리지만, 받을 수 없어 환자를 놓치고 있습니다.",
   },
   {
     icon: MessageCircle,
-    title: "블로그 챗봇은 엉뚱한 답변",
-    desc: "일반 AI 챗봇은 우리 병원 정보가 없어서 잘못된 진료과목, 없는 의료진을 안내합니다.",
+    title: "일반 챗봇 답변 퀄리티 표준화",
+    desc: "일반 AI 챗봇은 학습이 없어서 객관식 질문 답변 혹은 잘못된 정보를 안내합니다.",
   },
   {
     icon: AlertTriangle,
     title: "의료법 위반 우려",
-    desc: "AI가 효능·효과를 언급하면 의료광고 심의 위반. 과태료 리스크가 있습니다.",
+    desc: "기존의 광고 콘텐츠는 의료광고 심의 위반. 과태료 리스크가 있습니다.",
   },
 ]
 
@@ -154,7 +154,7 @@ function ProblemSection() {
 const solutions = [
   {
     icon: ShieldCheck,
-    title: "할루시네이션 제로",
+    title: "답변 오류 최소화",
     desc: "우리 병원 DB에 있는 정보만 답변합니다. 없는 정보는 \"확인 후 안내드리겠습니다\"로 응답합니다.",
   },
   {
@@ -164,7 +164,7 @@ const solutions = [
   },
   {
     icon: Database,
-    title: "우리 병원 전용 DB",
+    title: "브랜드 맞춤형 솔루션",
     desc: "진료과목, 의료진, 진료시간, 시술 항목, 가격, 위치, 주차 정보까지. 병원 맞춤 지식 DB를 구축합니다.",
   },
   {
@@ -175,7 +175,7 @@ const solutions = [
   {
     icon: CalendarCheck,
     title: "문의를 예약으로 전환",
-    desc: "증상 안내 → 적합 진료과 추천 → 예약 유도까지 자동으로 진행합니다.",
+    desc: "질문 → 적합 치료 및 정보 제공 → 예약 유도까지 AI가 자동으로 만들어냅니다.",
   },
 ]
 
@@ -184,7 +184,7 @@ function SolutionSection() {
     <section className="py-16 md:py-24 px-4">
       <div className="max-w-5xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4" style={{ wordBreak: "keep-all" }}>
-          병원 전용 AI 챗봇은 다릅니다
+          에이포스의 AI 솔루션은 다릅니다
         </h2>
         <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto" style={{ wordBreak: "keep-all" }}>
           우리 병원 데이터만 학습한 AI가 환자에게 정확한 정보를 안내합니다
@@ -225,8 +225,8 @@ function SolutionSection() {
 // 섹션 4: 성과 지표
 // =============================================
 const stats = [
-  { value: "93%", label: "자동 응답률", desc: "환자 문의를 AI가 자동 처리" },
-  { value: "3초", label: "평균 응답 시간", desc: "환자 대기 시간 제로" },
+  { value: "93%", label: "단순 질문 처리 비율", desc: "환자 문의를 AI가 자동 처리" },
+  { value: "3초 이하", label: "평균 응답 시간", desc: "환자 대기 시간 제로" },
   { value: "47%↑", label: "예약 전환율 향상", desc: "문의 → 예약 전환율 증가" },
   { value: "2주", label: "구축 완료 기간", desc: "상담부터 운영 시작까지" },
 ]
@@ -259,24 +259,24 @@ function StatsSection() {
 // =============================================
 const comparisons = [
   {
-    before: "진료시간 문의에 직원이 직접 응대",
+    before: "진료시간 문의만 상담 직원이 응대",
     after: "AI가 24시간 자동 응답",
   },
   {
-    before: "일반 챗봇이 엉뚱한 병원 정보 안내",
-    after: "우리 병원 DB 기반 정확한 답변",
+    before: "일반 챗봇은 한정되거나 잘못된 정보 안내",
+    after: "브랜드 DB 학습 기반 정확한 답변",
   },
   {
-    before: "의료법 위반 우려로 AI 도입 망설임",
-    after: "의료광고 필터 적용, 합법적 운영",
+    before: "의료법 숙지 어려움으로 AI 도입 둔화",
+    after: "의료법 필터 적용, 안정적 운영 가능",
   },
   {
-    before: "야간/주말 문의 → 환자 이탈",
-    after: "24시간 응대 → 예약 전환",
+    before: "야간/주말 문의 → 응대 부재로 인한 환자 이탈",
+    after: "24시간 응대 가능 → 예약 전환 증대",
   },
   {
-    before: "홈페이지 방문자 → 그냥 이탈",
-    after: "챗봇 상담 → 예약 완료",
+    before: "단순 질의응답 응대 → 브랜드 비교 → 이탈 가능성 증대",
+    after: "챗봇 단순 질문 응답 → 즉시 예약 여부 확인 → 예약률 증대",
   },
 ]
 
@@ -315,20 +315,20 @@ const steps = [
   {
     icon: FileText,
     step: "Step 1",
-    title: "병원 정보 입력",
-    desc: "진료과목, 의료진, 진료시간, 시술/가격 정보를 입력합니다.",
+    title: "상담 및 계약 진행",
+    desc: "시스템 도입에 앞서 계약 및 구체적 기능 협의",
   },
   {
     icon: Brain,
     step: "Step 2",
-    title: "AI 학습 자동 완료",
-    desc: "입력된 정보를 자동으로 학습하고 지식 DB를 구축합니다.",
+    title: "AI 2중 퍼널 솔루션 개발",
+    desc: "입력된 정보를 학습하고 브랜드 지식 DB를 통해 답변 방향성을 구축합니다.",
   },
   {
     icon: Rocket,
     step: "Step 3",
-    title: "홈페이지에 챗봇 설치",
-    desc: "1줄 코드만 삽입하면 바로 운영이 시작됩니다.",
+    title: "챗봇 설치 및 기능 도입",
+    desc: "바로 운영과 유지보수가 시작됩니다.",
   },
 ]
 
@@ -479,7 +479,7 @@ const faqs = [
   },
   {
     q: "비용은 얼마인가요?",
-    a: "병원 규모와 기능에 따라 맞춤 견적을 제공합니다. 무료 상담을 신청하시면 상세 안내드립니다.",
+    a: "병원에서 희망하는 기능에 따라 맞춤형 견적을 제공합니다. 무료 상담을 신청하시면 상세히 안내드립니다.",
   },
 ]
 
@@ -620,9 +620,9 @@ function CTAFormSection() {
             무료 상담 신청
           </h2>
           <p className="text-gray-400" style={{ wordBreak: "keep-all" }}>
-            병원에 맞는 AI 챗봇을 안내해 드립니다.
+            병원에 맞춘 AI 솔루션을 안내해 드립니다.
             <br />
-            상담 신청 후 24시간 내 담당자가 연락드립니다.
+            상담 신청 후 영업일 기준 24시간 내에 담당자가 연락드립니다.
           </p>
         </div>
 
@@ -778,9 +778,9 @@ function FooterSection() {
     <footer className="py-8 px-4 border-t border-white/5">
       <div className="max-w-4xl mx-auto text-center">
         <p className="text-sm text-gray-500 leading-relaxed">
-          주식회사 루미브리즈 | 대표 유범석 | lumibeeze00@gmail.com
+          에이포스파트너스｜대표 최보람｜contact@apose.partners
           <br />
-          경기도 하남시 미사강변서로 22, 에코큐브 지식산업센터 1005호
+          서울특별시 동산로 10길 73, 4층
         </p>
       </div>
     </footer>
