@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 
 export function AdminLogin({ onLoginSuccess }: { onLoginSuccess: () => void }) {
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -21,11 +21,10 @@ export function AdminLogin({ onLoginSuccess }: { onLoginSuccess: () => void }) {
     setIsLoading(true)
     setError(null)
 
-    if (email === "admin@example.com" && password === "admin1234") {
-      console.log("[v0] Login successful")
+    if (username === "admin" && password === "admin2580") {
       onLoginSuccess()
     } else {
-      setError("이메일이나 비밀번호가 올바르지 않습니다.")
+      setError("아이디 또는 비밀번호가 올바르지 않습니다.")
     }
     setIsLoading(false)
   }
@@ -47,13 +46,13 @@ export function AdminLogin({ onLoginSuccess }: { onLoginSuccess: () => void }) {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">이메일</Label>
+              <Label htmlFor="username">아이디</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="admin@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                type="text"
+                placeholder="아이디를 입력하세요"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
                 disabled={isLoading}
               />
@@ -64,7 +63,7 @@ export function AdminLogin({ onLoginSuccess }: { onLoginSuccess: () => void }) {
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder="비밀번호를 입력하세요"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -76,13 +75,6 @@ export function AdminLogin({ onLoginSuccess }: { onLoginSuccess: () => void }) {
               {isLoading ? "로그인 중..." : "로그인"}
             </Button>
           </form>
-
-          <div className="mt-6 text-sm text-muted-foreground">
-            <p className="font-semibold mb-2">관리자 계정 생성 방법:</p>
-            <ol className="list-decimal list-inside space-y-1 text-xs">
-              <li>기본 계정: admin@example.com / admin1234</li>
-            </ol>
-          </div>
         </CardContent>
       </Card>
     </div>

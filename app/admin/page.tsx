@@ -1,30 +1,19 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { RefreshCw, LogOut } from "lucide-react"
+import { LogOut } from "lucide-react"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { AdminLogin } from "@/components/admin-login"
 
-interface Consultation {
-  id: string
-  privacy_consent: boolean
-  company_name: string
-  contact_name: string
-  phone: string
-  email: string
-  _creationTime: number
-}
-
 export default function AdminPage() {
-  const consultations = useQuery(api.consultations.get) || []
-  const isLoading = consultations === undefined
+  const leads = useQuery(api.hospitalChatbotLeads.get) || []
+  const isLoading = leads === undefined
 
-  // TODO: Implement proper admin auth with Convex or keep as local state for now
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   const handleLogout = () => {
@@ -42,8 +31,6 @@ export default function AdminPage() {
     })
   }
 
-
-
   if (!isAuthenticated) {
     return <AdminLogin onLoginSuccess={() => setIsAuthenticated(true)} />
   }
@@ -58,19 +45,15 @@ export default function AdminPage() {
                 <CardTitle className="text-3xl">상담 신청 내역</CardTitle>
                 <CardDescription className="mt-2">접수된 상담 신청을 확인하고 관리할 수 있습니다</CardDescription>
               </div>
-              <div className="flex gap-2">
-                <Button onClick={handleLogout} variant="outline" size="icon" title="로그아웃">
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              </div>
+              <Button onClick={handleLogout} variant="outline" size="icon" title="로그아웃">
+                <LogOut className="w-4 h-4" />
+              </Button>
             </div>
           </CardHeader>
           <CardContent>
-
-
             {isLoading ? (
               <div className="text-center py-12 text-muted-foreground">데이터를 불러오는 중...</div>
-            ) : consultations.length === 0 ? (
+            ) : leads.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">아직 접수된 상담 신청이 없습니다.</div>
             ) : (
               <div className="overflow-x-auto">
@@ -87,15 +70,15 @@ export default function AdminPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {consultations.map((consultation, index) => (
-                      <TableRow key={consultation.id}>
+                    {leads.map((lead, index) => (
+                      <TableRow key={lead._id}>
                         <TableCell className="font-medium">{index + 1}</TableCell>
-                        <TableCell>{consultation.company_name}</TableCell>
-                        <TableCell>{consultation.contact_name}</TableCell>
-                        <TableCell>{consultation.phone}</TableCell>
-                        <TableCell>{consultation.email}</TableCell>
+                        <TableCell>{lead.hospital_name}</TableCell>
+                        <TableCell>{lead.contact_name}</TableCell>
+                        <TableCell>{lead.phone}</TableCell>
+                        <TableCell>{lead.email}</TableCell>
                         <TableCell>
-                          {consultation.privacy_consent ? (
+                          {lead.privacy_consent ? (
                             <Badge variant="default" className="bg-green-600">
                               동의
                             </Badge>
@@ -103,7 +86,7 @@ export default function AdminPage() {
                             <Badge variant="destructive">미동의</Badge>
                           )}
                         </TableCell>
-                        <TableCell className="text-muted-foreground">{formatDate(consultation._creationTime)}</TableCell>
+                        <TableCell className="text-muted-foreground">{formatDate(lead._creationTime)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -111,7 +94,7 @@ export default function AdminPage() {
               </div>
             )}
 
-            <div className="mt-6 text-sm text-muted-foreground">총 {consultations.length}건의 상담 신청</div>
+            <div className="mt-6 text-sm text-muted-foreground">총 {leads.length}건의 상담 신청</div>
           </CardContent>
         </Card>
       </div>
